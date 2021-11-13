@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--
+			JS数组篇：5.9->5.12
+		 -->
+		<meta charset="utf-8">
+		<title></title>
+		<script type="text/javascript">
+		// 数组
+		// JS 数组是弱类型
+		var arr = [];
+		var arr1 = [0,1,2,3];
+			
+		var arr2 = [0,1,,3];
+		var arr3 = [,,,];
+		
+		var arr4 = [0,'accc',undefined,null,true,{}];
+		
+		// 如何访问数组元素
+		console.log(arr1[1]);
+		console.log(arr4[3]);
+// 一、数组的使用：
+		// 1、如果一个下标位置原来不存在，会添加
+		arr[2] = 3;
+		console.log(arr2);
+		// 2、如果必要，还会增加长度
+		arr2[4] = 2;
+		console.log(arr2);
+		// 3、如果下标存在，就会覆盖
+		arr2[0] = 'ab';
+		console.log(arr2);
+		
+// 二、使用构造函数生成数组(不推荐)
+		arr = new Array(); // 等价arr = [];	
+		arr1 = new Array(0,1,2,3); // 等价于arr1 = [0,1,2,3];
+		/* 
+		 * arr3 = [4];(x)
+		 * arr3 等价于 长度为4有3个empty的数组 [,,,]
+		 */
+		arr3 = new Array(4);
+		/* 
+		 * 稀疏数组、矩阵 
+		 * -> 就像图像算法中的许多0的地方通过矩阵进行处理，用部分空间表示
+		 */
+		var larr = new Array(10000); 
+		
+		larr[3] = 5;
+		larr[1.5] = 7;
+		
+// 三、你可以把数组当作map来用；key-value
+		var a4 = [];
+		a4['China'] = '满汉全席';
+		a4['American'] = '火鸡';
+		a4['France'] = '牛排'; 
+		console.log(a4);
+		//添加非数字下标，数组长度length无变化
+		
+// 四、如何判断一个变量是数组？
+		var arr = [];
+		console.log(typeof(arr)); // object
+		console.log(arr.constructor.name == 'Array'); //Array
+// 五、轮询数组的方法
+		arr = [0,1,,,,5];
+		arr['China'] = '满汉全席'
+		// 1、for(i)，数组下标方式遍历
+		for(var i = 0;i < arr.length;i++){
+			console.log("数组遍历一"+arr[i]);
+		}
+		// 2、for(in)
+		for(var x in arr){
+			console.log("数组遍历二"+arr[x]);
+		}
+		/* 3、for(in)是按照数组的方式改动数组，
+		 * for(i)是按照数组的方式改动数组， 而for(in)使用map方式返回所有非稀疏的节点key。
+		 * 返回的是key
+		 */
+		/* 4、forEach()，返回所有数字且非稀疏的节点的value
+		 * 返回的是value
+		 */ 
+		arr.forEach(function(x){
+			console.log("数组遍历三"+x);
+		});
+// 六、数组的函数
+		// 1、concat连接法[不会动本身的函数]
+		var arr = [3,2,1];
+		var arr2 = [5,6,7,8];
+		var arr3 = arr.concat(arr2);
+		console.log(arr3);
+		// 2、join可以指定方式拼接数组，作为字符串返回
+		var arr4 = arr3.join(',');
+		var arr5 = arr3.join('-');
+		var arr6 = arr3.join('   ');
+		console.log(arr5);
+		// 3、sort()数字sort[会动本身的函数]
+		arr3 = [1,5,3,9,5,0,8];
+		arr3.sort()
+		console.log(arr3);
+// 七、数据结构-栈堆-stack
+		/* 1、栈：后进先出,stack
+		 * 进栈：push、出栈：pop；尾进尾出
+		 * 扩展笔记：控制台返回：native code代表引擎实现
+		 */ 
+		var arr = ['a','b','c']
+		console.log(arr.join(','));
+		arr.push('z');
+		console.log(arr.join(','));
+		console.log(arr.pop()); // 后进后出
+		/* 2、栈：头进头出,stack
+		 * 进栈：unshift、出栈：shift；头进头出
+		 */ 
+		arr = ['a','b','c'];
+		console.log(arr.join(','));
+		arr.unshift('z');
+		console.log(arr.join(','));
+		arr.shift();
+		console.log(arr.join(','));
+// 八、数据结构-队列-queue（尾进头出，头进尾出）
+		arr = ['a','b','c'];
+		console.log(arr.join(','));
+		arr.push('z');
+		console.log(arr.join(','));
+		arr.shift();
+		console.log(arr.join(','));
+	// 九、栈的应用
+			/* 2+3*5
+			 * 1、算法思维
+			 *  （1）低优先级操作符遇到右边高优先级，右先
+			 *  （2）同优先级，从左向右
+			 *  （3）高优先级遇到右边低优先级，左先
+			 * 2、软件工程或开发的思路
+			 *   2.1 测试用例
+			 * 	 - 2+3*5-4
+			 * 	 - 1+2+3+4
+			 *   - 2*3*4*5
+			 * 	 - 1*2+3*4/5-4/2
+			 *   - 1+2
+			 *   - 2*3
+			 *   2.2 要存在Debug的手段：Debug工具，或者log
+			 */
+			// 问题：求解公式
+			var x = '2+3*5-4';
+			// 栈，push-pop
+			var nArray = [];
+			var oArray = [];
+			
+			var cl = 5; //--------------------------to be deleted--------------
+			
+			var OPERATOR = [['+',0],['-',0],['*',1],['/',1]];
+			
+			var nRet = 0;
+			var iRet = '';
+			var i = 0; // pointer to current op
+			
+			// first number
+			var sNToken = x.charCodeAt(i) - 48;
+			var sPToken = '';
+			var nPriority = 0;
+			
+			//'0' 30h 48  '9' 39h 57
+			if(sNToken < 0 || sNToken > 9){
+				iRet = 'Error at position ' + i + ' : is not a number(' + x.charAt(i) + ')! Are you kidding me?';
+			}else{
+				nArray.push(sNToken);
+				i = 1;
+				for(;i < x.length;){
+					// get the operator
+					sPToken = x.charAt(i);
+					// ----validate the operator
+					for(var j = 0; j < OPERATOR.length; j++){
+						if(OPERATOR[j][0] == sPToken){
+							break;
+						}
+					}
+					if(j >= OPERATOR.length){
+						iRet = 'Error at position ' + i + ' : Syntax error: invalid operator \'' + sPToken + '\'';
+						break;
+					}
+					// ----get the priority
+					nPriority = OPERATOR[j][1];
+					
+					// get the second number
+					sNToken = x.charCodeAt(i+1) - 48;
+					if(sNToken < 0 || sNToken > 9){
+						iRet = 'Error at position ' + (i + 1) + ' : is not a number(' + x.charAt(i + 1) + ')! Are you kidding me?';
+						break;
+					}
+					
+					// compare the priority of the operatore
+					
+					while(oArray.length != 0 && oArray[oArray.length-1][1] >= nPriority){
+						// 弹栈计算
+						var n;
+						var n2 = nArray.pop();
+						var n1 = nArray.pop();
+						var op = oArray.pop()[0];
+						
+						switch(op){
+							case '+':
+								n = n1 + n2;
+								break;
+							case '-':
+								n = n1 - n2;
+								break;
+							case '*':
+								n = n1 * n2;
+								break;
+							case '/':
+								n = n1 / n2;
+								break;
+						}
+						
+						if(!isFinite(n) || isNaN(n)){
+							iRet = 'Error, the result is invalid!';
+							break;
+						}else{
+							nArray.push(n);
+						}
+					}
+					
+					if(iRet){
+						break;
+					}
+					
+					// 压栈
+					nArray.push(sNToken);
+					var opPair = [];
+					opPair[0] = sPToken;
+					opPair[1] = nPriority;
+					
+					oArray.push(opPair);
+					i += 2;
+				}
+				while(oArray.length != 0){
+					// 弹栈计算
+					var n;
+					var n2 = nArray.pop();
+					var n1 = nArray.pop();
+					var op = oArray.pop()[0];
+					
+					switch(op){
+						case '+':
+							n = n1 + n2;
+							break;
+						case '-':
+							n = n1 - n2;
+							break;
+						case '*':
+							n = n1 * n2;
+							break;
+						case '/':
+							n = n1 / n2;
+							break;
+					}
+					
+					if(!isFinite(n) || isNaN(n)){
+						iRet = 'Error, the result is invalid!';
+						break;
+					}else{
+						nArray.push(n);
+					}
+				}
+			}
+			
+			// check;
+			if(iRet){
+				console.log(iRet);
+				// Error happens.---------------------to be added------------------------
+			}else{
+				console.log(nRet = nArray.pop())
+			}
+			
+		</script>
+	</head>
+	<body>
+		
+	</body>
+</html>
