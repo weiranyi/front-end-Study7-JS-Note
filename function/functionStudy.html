@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+// 一、函数的定义和使用
+        /*1、所给参数不符合要求的处理方法：
+           第一，发现不合格，拒绝服务，保证自己的代码不崩溃。
+           第二，发现不合格，把合格部分处理，返回。
+           - 功能，就是把数组求和。
+        */
+        x = [1,2,3,4,5,NaN,undefined,null,'abc'];
+        /*  function <函数名>([<形式上的参数>]){
+            	//函数体
+            }
+            - 函数可以有形参，也可以没有
+            - 函数可以有返回值，也可以没有，没有的时候函数返回undefined
+        */
+        function sum(arr){
+            var iRet = 0;
+            
+            for(var i = 0; i < arr.length; i++){
+                if(typeof(arr[i]) == 'number'){
+                    if(!isNaN(arr[i]) && isFinite(arr[i])){
+                        iRet += arr[i]
+                    }
+                }
+            }
+            // console.log(iRet);
+            return iRet;
+        }
+        // 数字翻转
+        function reverseNumber(num){
+            if(typeof num != 'number'){
+                return '';
+            }
+            
+            if(!isFinite(num) || isNaN(num)){
+                return '';
+            }
+            // 转字符串，按照空格转数组，再反转，再拼接，最后的+操作符可以转换
+            return +num.toString().split('').reverse().join('');
+        }
+        console.log(reverseNumber(12345));
+// 二、函数的表达式（非声明方式就都是函数的表达式）
+        /*
+            -  (function f(){})
+            -  var f = function ff(){};
+            -  ff(a,function fff(){},b);
+            -  var f = function fact(x){
+                    if(x <= 1){
+                        return 1;
+                    }else{
+                        return x * fact(x-1);
+                    }
+                };
+         */
+        // var f = function fact(x){
+        // 	if(x <= 1){
+        // 		return 1;
+        // 	}else{
+        // 		return x * fact(x-1);
+        // 	}
+        // };
+        // console.log(f(5));
+        var f = function(x){
+            if(x <= 1){
+                return 1;
+            }else{
+                //自己调自己前后没有名字的就使用callee
+                return x * arguments.callee(x-1);
+            }
+        };
+        console.log(f(5));
+// 三、函数作为参数传递给另一个函数
+        function f1(xingcan){
+        	console.log(xingcan);
+        	console.log(xingcan());
+        }
+
+        // f2()是函数声明
+        function f2(){
+        	console.log('I am f2()');
+        	return 'f2 say hello!';
+        }
+        f1(f2);
+
+        // f3是函数表达式
+        var f3 = function(){
+        	console.log('I am f3()');
+        	return 'f3 say hello!';
+        };
+        f1(f3);
+
+        // 立即执行函数
+        // function 是一个引用类型的对象
+        console.log((function(x){
+        	console.log('I am f3()');
+        	return 'f3 say hello to ' + x + '!';
+        })('leo'));// 立即函数不能传参数
+
+        var x = [5];
+        var y = [6];
+
+        function exchange(a,b){
+            var c = a[0];
+            a[0] = b[0];
+            b[0] = c;
+        }
+        exchange(x,y);
+
+        console.log(x + ' ' + y);
+
+        //// 栈内存
+        //ST001:x,HP001
+        //ST002:y,HP002
+        //ST003:
+        //ST004:
+        //ST005:
+        //ST006:
+        //// 堆内存 
+        //HP001:[6],(1)
+        //HP002:[5],(1)
+        //HP003:
+        //HP004:
+// 四、嵌套函数，重复的过程要提炼出函数
+        function hypotenuse(a, b){
+        //	function square(x){
+        //		return x * x;
+        //	}
+            var square = function(x){
+                return x * x;
+            };
+            return Math.sqrt(square(a) + square(b));
+        }
+        hypotenuse(3,4);
+        console.log(hypotenuse(3,4));
+// 五、函数的调用方式
+        // 1.函数的方式
+        // 2.作为方法
+        //var obj = {
+        //	add: function(a,b){ 函数放在对象中的情况
+        //		return a + b;
+        //	}
+        //};
+
+        //var obj = {};
+        //obj.add = function(a,b){
+        //	return a + b;
+        //};
+        //
+        //console.log(obj.add(1,2));
+        //console.log(obj['add'](1,2));
+        // 3.构造函数
+        // var arr = new Array();
+
+        // 4.间接调用
+        //   间接调用和直接调用，唯一的区别是可以绑定this指针。
+        //   如果不考虑this，这三种调用方式完全一样。
+
+        function hypotenuse(a, b){
+            return Math.sqrt(a * a + b * b);
+        }
+
+        this.hypotenuse(3,4);
+        hypotenuse.call(this, 3, 4);
+        hypotenuse.apply(this, [3,4]);
+// 六、形参和实参数
+        // 形参和实参是不一样的，数量，类型都可以不一样，JS engine doesn't care
+        // 形参和实参会绑定，动态关联，关联后该任意一个都会影响另外一个
+        function foo(a, b, c){// a,b,c 是形参
+        	console.log(foo.length);
+        	console.log(arguments) // arguments 是实参数组
+        	
+        	arguments[1] = -1;
+        	console.log(b);
+        }
+        foo(1); // 情况一：进去会绑定第一个参数
+        foo(1,2,3,4,5,6); // 情况二：进去会绑定五个参数
+// 七、递归
+        /*
+            - 一般练习的时候才使用递归，工业项目一般不使用递归，因为设备的栈空间一般很小
+
+        */
+        function foo(i){
+        	if(i < 0) return;
+        	console.log('begin:' + i);
+        	foo(i-1)// foo(1), foo(0)
+        	console.log('end:' + i);
+        }
+        foo(2);
+
+        //// 栈内存
+        //ST001:
+        //ST002:
+        //ST003:
+        //ST004:
+        //ST005:
+        //ST006:
+        //// 堆内存 
+        //HP001:
+        //HP002:
+        //HP003:
+        //HP004:
+
+        //递归的例子
+        // 有一行台阶，阶数为N，我们可以一次走1步，2步，3步，一共有多少种走法？
+        function step(n){
+        	switch(n){
+        		case 1:
+        			return 1;
+        			break;
+        		case 2:
+        			return 2;
+        			break;
+        		case 3:
+        			return 4;
+        			break;
+        		default:
+        			return (step(n-3) + step(n-2) + step(n-1))
+        			break;
+        	}
+        	return '';
+        }
+        console.log(step(5));
+
+        //step(1):1
+        //step(2):2
+        //step(3):1 + step(2) + step(1) = 4
+        //step(4):step(1) + step(2) + step(3) = 7
+        //step(5): 7 + 4 + 2
+        //...
+        //step(n):step(n-3) + step(n-2) + step(n-1)
+    </script>
+</head>
+<body>
+    
+</body>
+</html>
