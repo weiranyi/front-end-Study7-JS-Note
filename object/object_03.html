@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>自定义构造函数</title>
+    <script>
+        // 创建一个对象
+        var objBook ={
+            name:'Book', // 原始成员
+            pageNumber:300,
+            author:{ // 引用成员
+                name:'weiranyi',
+                phone:18180185008
+            },
+            query:function (){  // 成员函数
+                console.log("查询函数");
+            },
+            addPage:function (){
+                this.pageNumber++;
+                console.log('addPage');
+            }
+        };
+        /*
+         * - 对步骤的复用需求，人们想出了函数
+         * - 为了实现对象的的复用，人们想出了构造函数
+         */
+        // 构造函数名称以大写字母开头
+        function student(name,age,gender) {
+            // 1、相当于这里有个这个代码：var object{};
+            this.name = name;
+            this.age = age;
+            this.gender = gender;
+            // 2、相当于这里有个这个代码：return object;
+        }
+        var std = new Student("weiranyi",18,"male");
+        /*
+        * 1、匈牙利命名规则：属性+类型+对象描述【早年Windows常用的规则】
+        * - 属性：
+        *   成员变量 m_
+        *   静态变量 s_
+        *   常量 c_或全大写
+        * - 类型：
+        *   整型i  数组a  字符串str
+        * - 对象：
+        *   单词+单词（所有单词都大写）
+        *
+        * 2、小驼峰规则：只有对象描述
+        * - 第一个单词首字母小写，其余单词首字母大写
+        *
+        * 3、大驼峰规则：只有对象描述
+        * - 所有单词字母大写
+        * 王立老师论断：强类型语言会被弱类型语言替代，编译器会越来月强大；不建议学React框架；未来是脚本语言的方向
+        * */
+    </script>
+</head>
+<body>
+</body>
+</html>

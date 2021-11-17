@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>对象的创建与使用</title>
+    <script>
+        // 创建一个对象
+        var obj1 = {};
+        var obj2 = new Object();
+        var objBook ={
+            name:'Book', // 原始成员
+            pageNumber:300,
+            author:{ // 引用成员
+                name:'weiranyi',
+                phone:18180185008
+            },
+            query:function (){  // 成员函数
+                console.log("查询函数");
+            },
+            addPage:function (){
+                this.pageNumber++;
+                console.log('addPage');
+            }
+        };
+        console.log(++objBook.pageNumber);
+        objBook.query();
+        objBook['query']();
+    </script>
+</head>
+<body>
+
+</body>
+</html>

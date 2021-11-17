@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>对象的增删改查与枚举</title>
+    <script>
+        var obj = {};
+// 1、增加
+        // 往一个对象上加
+        obj.a = 'weiranyi';
+        obj['0'] = 'weiran';
+
+        obj.f1 = function () {
+            console.log('weiran')
+        }
+
+        // 向window对象上面加
+        function f2() {
+            aa = 5; // aa在里面是全局变量，若变量类型什么都不写默认挂在到Windows上去
+            // 所以这段代码等价于window.aa = 5
+        };
+// 2、查询
+        //（1）in,是不是对象中的属性
+        console.log('a' in obj);
+        //（2）hasOwnProperty,是不是对象中的属性
+        console.log(obj.hasOwnProperty('a'))
+        f2();
+        alert(aa);
+// 3、删除
+        delete obj.a;
+        //（1）in,是不是对象中的属性
+        console.log('a' in obj);
+        //（2）hasOwnProperty,是不是对象中的属性
+        console.log(obj.hasOwnProperty('a'))
+        // var arr = [1,2];
+        // delete arr[0];
+        // console.log(arr);
+        // var arr = [];
+        // arr['a'] = 'c';
+        // delete arr['a'];
+        // console.log(arr)
+// 4、改
+        obj.a = 8191;
+
+// 5、枚举[自己的，从原型那继承来的东西不能遍历出来]
+        for(var p in obj){
+            console.log(p);
+        }
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>
