@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>类和包装类</title>
+    <script>
+        var n1 = 123;
+        var n2 = Number(123); // 包装类
+        console.log(typeof(n1));
+        console.log(typeof(n2));
+
+        var s1 = 'aaa';
+        var s2 = new String('aaa'); // 包装类
+        console.log(typeof(s1))
+        console.log(typeof(s2))
+
+        var b1 = true;
+        var b2 = new Boolean(true);
+        console.log(typeof(b1));
+        console.log(typeof(b2));
+
+        var arr = [1,2,3,4];
+        arr.length = 2;// 会变短，34被删掉
+        console.log(arr);
+
+        var str ='1234';
+        str.length = 2; // 不会变短，但能写
+        /* 等价于 var strTmp = new String(str);
+         * strTmp.length = 2;
+         * 摧毁，不在栈里面
+         * 综上：先包装再拆
+         * 所以：str不受影响
+         */
+        var iNum = 123; //var iTmp = new Number(iNum);
+        iNum.toString();
+
+    </script>
+</head>
+<body>
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>预编译:第一次扫描</title>
+    <script>
+// 一、预编译 - 脚本的预编译
+        /*
+         * JavaScript引擎三大步骤：
+         * 1、预编译（第一次、前置扫描）：
+         * （1）创建一个全局对象Golobal Object（window）【上下文】
+         * （2）加载脚本文件
+         * （3）预编译：
+         *    1）找出所有变量的声明，按照变量加入全局对象，如果已经存在则忽略【不运行赋值】
+         *    2）找出函数声明，按照函数名加入全局对象，如果已经存在同名变量或者函数，替换
+         *    3）非声明不予理睬
+         * （4）解释执行
+         * 2、解释执行（第二次扫描）
+         */
+// 1、无var的变量全部看作window变量，不参与预编译
+    /*
+        console.log(aa) // 2、直接崩溃掉，这啥都没有捏
+        aa =5; // 1、本就是全局变量无预编译
+        console.log(aa) // 3、这个地方可以出来
+    */
+// 2、即使在函数中，aa也是全局变量（运行时，不是定义时!!!）
+    test123() // 函数不运行全局变量中是没有a滴
+    function test123() {
+        a =5;
+    }
+    console.log(a)
+// 3、脚本中，所有变量声明，在脚本预编译阶段完成，所有变量声明与实际的书写位置无关
+    console.log(aa) // 2）执行：未赋值undefined
+    var aa =5; // 1）预编译，先把aa加入到全局window对象中，不赋值！！！3）赋值：5
+    console.log(aa)// 4）执行：5
+// 4、脚本中所有函数声明，在脚本的预编译阶段完成，所有的函数声明与实际的位置无关
+    console.log(weiran)
+    function weiran() {
+        console.log(h1)
+    }
+// 5、脚本中变量与函数同名，函数将覆盖变量
+    console.log(haha)
+    var haha = 123;
+    function haha() {
+        console.log(123)
+    }
+// 6、脚本中只有函数能够覆盖变量，变量无法覆盖函数
+    console.log(haha1)
+    function haha1() {
+        console.log(123)
+    }
+    var haha1 = 123;
+    // 本行代码中若 console.log(haha1) 放在 var haha1 = 123; 将输出123
+    // 因为这个时候是赋值了，所以输出123
+
+// 7、脚本中后面的函数声明覆盖前面的函数声明，并且，忽略参数（就和Java等语言的重载不同）
+    haha2(1); // 输出haha2_2 【只考虑名字】
+    function haha2(a) {
+        console.log("haha2_1")
+    }
+    function haha2(a,b) {
+        console.log("haha2_2")
+    }
+// 二、预编译 - 函数调用
+    /*
+     * 1、创建活动对象AO（Active Object）（上下文）
+     * 2、预编译：
+     *  - scope chain[作用域链]
+     *  - 初始化arguments
+     *  - 初始化形参，将arguments中的值赋值给形参
+     *  - 找出所有的变量声明，按照变量名加入AO，若存在则忽略
+     *  - 找出所有函数声明，按照函数名加入AO，若存在同名变量或函数就替换
+     *  - this初始化
+     * 3、解释执行
+     */
+// 2-1、函数中，所有变量声明，在函数预编译阶段完成，所有函数声明与实际的书写位置无关
+    function f() {
+        console.log(aa) // 2）执行：未赋值undefined
+        var aa =5; // 1）预编译，先把aa加入到全局window对象中，不赋值！！！3）赋值：5
+        console.log(aa)// 4）执行：5
+    }
+    f();
+// 2-2、函数中所有函数声明，在函数的预编译阶段完成，所有的函数声明与实际的位置无关
+    function f1() {
+        console.log(weiran)
+        function weiran() {
+            console.log('h1')
+        }
+    }
+    f1()
+// 2-3、函数中变量与函数同名，函数将覆盖变量
+    function f2() {
+        console.log(haha)
+        var haha = 123;
+        function haha() {
+            console.log(123)
+        }
+    }
+    f2()
+// 2-4、函数中变量与函数同名，函数将覆盖变量，变量无法覆盖函数
+    function f3() {
+        console.log(haha)
+        var haha = 123;
+        function haha() {
+            console.log(123)
+        }
+    }
+    f3();
+// 2-5、函数中，后面的函数声明覆盖前面的函数声明，并且，忽略参数（就和Java等语言的重载不同）
+    function f4() {
+        haha2(1); // 输出haha2_2 【只考虑名字】
+        function haha2(a) {
+            console.log("haha2_1")
+        }
+        function haha2(a,b) {
+            console.log("haha2_2")
+        }
+    }
+    f4();
+/* 2-6、当函数预编译后，遇到需要访问的变量或函数，优先考虑自己AO中定义的变量和函数，
+ *      若找不到才会在上一层AO中找,直到全局对象Golobal Object
+ */
+    var scope = 'global';          // 1、var scope = undefined;
+    function f5() {
+        console.log(scope); // [undefined]
+        var scope = 'local';       // 2、function f5(){}
+        console.log(scope); // [local]
+    }
+    f5()
+    console.log(scope); // [global]
+/*
+* GO:
+*   - scope:undefined;[第一次预编译] global[第一次执行]
+*   - f5:function;[第一次预编译] [第一次执行，出现f5-AO]
+*
+* f5-AO:
+*   - scope:undefined;[函数调用后的第一次预编译] local[函数调用后的第一次执行]
+*
+*/
+    console.log(scope); // 1、undefined;
+    var scope = 'global';
+    function t(){
+    	var scope = 't-local';
+    	function t2(){
+    		console.log(scope); // 2、undefined
+    		var scope = 't2-local';
+    		console.log(scope); // 3、t2-local
+    	}
+    	t2();
+    	console.log(scope); // 4、t-local
+    }
+    t();
+    console.log(scope); // 5、global
+/*
+* 1、GO:
+* - scope:undefined; global;
+* - t:function
+* 2、t-AO:
+* - scope:undefined; t-local; [t-AO被摧毁]
+* - t2:function
+* 3、t2-AO:
+* - scope:undefined; t2-local; [t2-AO被摧毁]
+* */
+    function test(x,x) {
+        console.log(x); // function
+        x = 5;
+        console.log(arguments); // 5绑定的是参数中的第二个5，输出[12,5]
+        function x() {}
+    }
+    test(12,13);
+/* 阿里、腾讯、百度 前端面试题难度
+ * 1、Go:
+ *  - test:function
+ * 2、test-AO:
+ *  - arguments:[12,13] 【进行绑定操作1】
+ *  - x:第一次绑12、第二次绑13
+ *      -> x:function
+ *      -> x:5【在执行x=5时】
+ *      -> 摧毁
+ */
+    </script>
+
+</head>
+<body>
+</body>
+</html>
